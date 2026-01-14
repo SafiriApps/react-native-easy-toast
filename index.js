@@ -98,20 +98,20 @@ export default class Toast extends Component {
         let pos;
         switch (this.props.position) {
             case 'top':
-                pos = this.props.positionValue;
+                pos = { top: this.props.positionValue };
                 break;
             case 'center':
-                pos = height / 2;
+                pos = { top: height / 2 };
                 break;
             case 'bottom':
-                pos = height - this.props.positionValue;
+                pos = { bottom: this.props.positionValue };
                 break;
         }
 
         const view = this.state.isShow ?
         <TouchableWithoutFeedback onPress={this.onPress} >
             <View
-                style={[styles.container, { top: pos }]}
+                style={[styles.container, pos ]}
                 pointerEvents="auto"
             >
                 <Animated.View
