@@ -6,20 +6,29 @@
  * @flow
  */
 
-import { Component, ReactNode } from "react";
-import { StyleProp, ViewStyle } from "react-native";
+import { Component, ReactNode } from 'react';
+import {
+  GestureResponderEvent,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 
 interface ToastComponentProps {
-  position?: "bottom" | "center" | "top";
-  textStyle?: {};
+  position?: 'bottom' | 'center' | 'top';
+  textStyle?: StyleProp<TextStyle>;
   positionValue?: number;
   fadeInDuration?: number;
   fadeOutDuration?: number;
   opacity?: number;
+  useNativeAnimation?: boolean;
+  hideOnPress?: boolean;
+  defaultCloseDelay?: number;
+  onPress?: (event: GestureResponderEvent) => void;
   style?: StyleProp<ViewStyle>;
 }
 
-declare module "react-native-easy-toast" {
+declare module 'react-native-easy-toast' {
   interface IDuration {
     LENGTH_SHORT: number;
     FOREVER: number;
@@ -31,9 +40,9 @@ declare module "react-native-easy-toast" {
     show: (
       text: string | ReactNode,
       duration?: number,
-      callback?: () => void
+      callback?: () => void,
+      onPress?: (event: GestureResponderEvent) => void,
     ) => void;
     close: (duration?: number) => void;
   }
 }
-

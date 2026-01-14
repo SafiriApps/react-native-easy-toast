@@ -1,4 +1,5 @@
 # react-native-easy-toast
+
 A react native module to show toast like android, it works on iOS and Android.
 
 [ ![release](https://img.shields.io/github/release/crazycodeboy/react-native-easy-toast.svg?maxAge=2592000?style=flat-square)](https://github.com/crazycodeboy/react-native-easy-toast/releases)
@@ -17,12 +18,15 @@ A react native module to show toast like android, it works on iOS and Android.
 
 ## Installation
 
-* 1.Run `npm i react-native-easy-toast --save`
-  * or  `yarn add react-native-easy-toast`
-* 2.`import Toast, {DURATION} from 'react-native-easy-toast'`
+- 1.Run `npm i react-native-easy-toast --save`
+  - or `yarn add react-native-easy-toast`
+- 2.`import Toast, {DURATION} from 'react-native-easy-toast'`
+
+Compatible with React Native `>=0.71` and React `>=17`.
 
 ## Demo
-* [Examples](https://github.com/crazycodeboy/react-native-easy-toast/tree/master/examples)
+
+- [Examples](https://github.com/crazycodeboy/react-native-easy-toast/tree/master/examples)
 
 ![Screenshots](https://raw.githubusercontent.com/crazycodeboy/react-native-easy-toast/master/examples/Screenshots/react-native-easy-toast-screenshots.gif)
 
@@ -45,8 +49,7 @@ Inside your component's render method, use Toast:
  }
 ```
 
-><span style="color:red">Note: Be sure to add `Toast` to the bottom of the root view.</span>
-
+> <span style="color:red">Note: Be sure to add `Toast` to the bottom of the root view.</span>
 
 Then you can use it like this:
 
@@ -60,7 +63,7 @@ show a toast, and execute callback function when toast close it:
 
 ```javascript
 this.toast.show('hello world!', 500, () => {
-    // something you want to do at close
+  // something you want to do at close
 });
 ```
 
@@ -73,15 +76,19 @@ this.toast.show('hello world!', DURATION.FOREVER);
 Or pass an element:
 
 ```javascript
-this.toast.show(<View><Text>hello world!</Text></View>);
- // later on:
- this.toast.close('hello world!');
+this.toast.show(
+  <View>
+    <Text>hello world!</Text>
+  </View>,
+);
+// later on:
+this.toast.close('hello world!');
 ```
 
 Optional you can pass a delay in seconds to the close()-method:
 
 ```javascript
- this.toast.close('hello world!', 500);
+this.toast.close('hello world!', 500);
 ```
 
 Currently, the default delay for close() in FOREVER-mode is set to 250 ms (or this.props.defaultCloseDelay, which you can pass with)
@@ -89,8 +96,6 @@ Currently, the default delay for close() in FOREVER-mode is set to 250 ms (or th
 ```jsx
  <Toast ... defaultCloseDelay={100} />
 ```
-
-
 
 ### Basic usage
 
@@ -135,28 +140,26 @@ render() {
 
 [GitHubPopular](https://github.com/crazycodeboy/GitHubPopular/blob/develop/js/page/SearchPage.js)
 
-
-
 ## API
 
+| Props              | Type                                         | Optional | Default                                                    | Description                                           |
+| ------------------ | -------------------------------------------- | -------- | ---------------------------------------------------------- | ----------------------------------------------------- |
+| style              | `StyleProp<ViewStyle>`                       | true     | `{backgroundColor: 'black', borderRadius: 5, padding: 10}` | Custom style for the toast container                  |
+| position           | `PropTypes.oneOf(['top','center','bottom'])` | true     | `'bottom'`                                                 | Toast position                                        |
+| positionValue      | `number`                                     | true     | `120`                                                      | Offset from the chosen edge                           |
+| fadeInDuration     | `number`                                     | true     | `500`                                                      | Show animation duration (ms)                          |
+| fadeOutDuration    | `number`                                     | true     | `500`                                                      | Close animation duration (ms)                         |
+| opacity            | `number`                                     | true     | `1`                                                        | Target opacity when visible                           |
+| textStyle          | `StyleProp<TextStyle>`                       | true     | `{color:'white'}`                                          | Text style                                            |
+| useNativeAnimation | `boolean`                                    | true     | `true`                                                     | Use the native driver for animations                  |
+| hideOnPress        | `boolean`                                    | true     | `true`                                                     | Close the toast when pressed                          |
+| defaultCloseDelay  | `number`                                     | true     | `250`                                                      | Delay used when closing FOREVER toasts or press-close |
+| onPress            | `function`                                   | true     | -                                                          | Optional press handler called before close            |
 
-Props              | Type     | Optional | Default     | Description
------------------ | -------- | -------- | ----------- | -----------
-style  | View.propTypes.style  | true | {backgroundColor: 'black',opacity: OPACITY,borderRadius: 5,padding: 10,}  |   Custom style toast
-position |  PropTypes.oneOf(['top','center','bottom',]) |true | 'bottom'  | Custom toast position
-positionValue  | React.PropTypes.number  | true | 120  |   Custom toast position value
-fadeInDuration  | React.PropTypes.number  | true | 500  |   Custom toast show duration
-fadeOutDuration  | React.PropTypes.number  | true | 500  |   Custom toast close duration
-opacity  | React.PropTypes.number  | true | 1  |   Custom toast opacity
-textStyle  | View.propTypes.style  | true | {color:'white'}  |   Custom style text
-
-
-
-Method   |  Type     | Optional | Description
------------------ | -------- | -------- | -----------
-show(text, duration, callback, onPress)   | function | false | show a toast,unit is millisecond，and do callback
-close()  |   function  |  -   |   start the close timer
-
+| Method                                  | Type     | Optional | Description                                                         |
+| --------------------------------------- | -------- | -------- | ------------------------------------------------------------------- |
+| show(text, duration, callback, onPress) | function | false    | show a toast (ms), with optional close callback and onPress handler |
+| close()                                 | function | -        | start the close timer                                               |
 
 ## Contribution
 

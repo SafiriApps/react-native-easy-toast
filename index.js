@@ -17,7 +17,6 @@ import {
 } from 'react-native';
 
 import PropTypes from 'prop-types';
-const ViewPropTypes = View.propTypes;
 export const DURATION = {
   LENGTH_SHORT: 500,
   FOREVER: 0,
@@ -28,15 +27,22 @@ const { height, width } = Dimensions.get('window');
 export default class Toast extends Component {
   constructor(props) {
     super(props);
+    this._isMounted = false;
+    this.isShow = false;
+    this.onPressCallback = undefined;
+    this.handlePress = this.handlePress.bind(this);
     this.state = {
       isShow: false,
       text: '',
-      opacityValue: new Animated.Value(this.props.opacity),
+      opacityValue: new Animated.Value(0),
     };
   }
 
   show(text, duration, callback, onPress) {
     if (this._isMounted) {
+      this.timer && clearTimeout(this.timer);
+      this.animation && this.animation.stop();
+      this.onPressCallback = onPress || this.props.onPress;
       this.duration =
         typeof duration === 'number' ? duration : DURATION.LENGTH_SHORT;
       this.callback = callback;
@@ -45,9 +51,11 @@ export default class Toast extends Component {
         text: text,
       });
 
+      this.state.opacityValue.setValue(0);
       this.animation = Animated.timing(this.state.opacityValue, {
         toValue: this.props.opacity,
         duration: this.props.fadeInDuration,
+        useNativeDriver: this.props.useNativeAnimation,
       });
       this.animation.start(() => {
         this.isShow = true;
@@ -75,10 +83,8 @@ export default class Toast extends Component {
             isShow: false,
           });
         }
-        this.setState({
-          isShow: false,
-        });
         this.isShow = false;
+        this.onPressCallback = undefined;
         if (typeof this.callback === 'function') {
           this.callback();
         }
@@ -96,6 +102,16 @@ export default class Toast extends Component {
     this._isMounted = false;
   }
 
+  handlePress(event) {
+    const pressHandler = this.onPressCallback || this.props.onPress;
+    if (typeof pressHandler === 'function') {
+      pressHandler(event);
+    }
+    if (this.props.hideOnPress) {
+      this.close(this.props.defaultCloseDelay);
+    }
+  }
+
   render() {
     let pos;
     switch (this.props.position) {
@@ -111,7 +127,7 @@ export default class Toast extends Component {
     }
 
     const view = this.state.isShow ? (
-      <TouchableWithoutFeedback onPress={this.onPress}>
+      <TouchableWithoutFeedback onPress={this.handlePress}>
         <View style={[styles.container, pos]} pointerEvents="auto">
           <Animated.View
             style={[
@@ -153,14 +169,25 @@ const styles = StyleSheet.create({
 });
 
 Toast.propTypes = {
-  // style: ViewPropTypes.style,
+  style: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+    PropTypes.number,
+  ]),
   position: PropTypes.oneOf(['top', 'center', 'bottom']),
-  // textStyle: Text.propTypes.style,
+  textStyle: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+    PropTypes.number,
+  ]),
   positionValue: PropTypes.number,
   fadeInDuration: PropTypes.number,
   fadeOutDuration: PropTypes.number,
   opacity: PropTypes.number,
   useNativeAnimation: PropTypes.bool,
+  hideOnPress: PropTypes.bool,
+  defaultCloseDelay: PropTypes.number,
+  onPress: PropTypes.func,
 };
 
 Toast.defaultProps = {
@@ -170,5 +197,7 @@ Toast.defaultProps = {
   fadeInDuration: 500,
   fadeOutDuration: 500,
   opacity: 1,
-  useNativeAnimation: false,
+  useNativeAnimation: true,
+  hideOnPress: true,
+  defaultCloseDelay: 250,
 };
